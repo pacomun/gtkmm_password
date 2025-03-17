@@ -4,6 +4,7 @@
 #ifndef VENTANA_MAIN_H
 #define VENTANA_MAIN_H
 #include <gtkmm.h>
+#include "../fsys.hpp"
 
 class VentanaMain : public Gtk::Window
 {
@@ -18,9 +19,13 @@ class VentanaMain : public Gtk::Window
         {
             public:
                 ModelColumns()
-                { add(col_id); add(col_name); }
+                { add(col_id);
+                  add(col_name);
+                  add(m_directory_entry);
+                }
 
                 Gtk::TreeModelColumn<int> col_id;
+                Gtk::TreeModelColumn<std::filesystem::directory_entry> m_directory_entry;
                 Gtk::TreeModelColumn<Glib::ustring> col_name;
         };
         
@@ -35,6 +40,9 @@ class VentanaMain : public Gtk::Window
 
         Gtk::Box m_ButtonBox;
         Gtk::Button m_Button_Quit;
+
+        // Listado de carpetas y archivos.
+        listado m_listado, m_hijos;
 
     public:
         VentanaMain();
