@@ -106,6 +106,9 @@ void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
         std::cout << "Row activated: ID=" << row[m_Columns.col_id] << ", Name="
             << row[m_Columns.col_name] << std::endl;
         std::cout << row[m_Columns.m_directory_entry] << std::endl;
+        auto m_dir_entry = static_cast<std::filesystem::directory_entry>(row[m_Columns.m_directory_entry]);
+        if (!m_dir_entry.is_directory())
+            DescifrarClave(m_dir_entry);
     }
 }
 

@@ -15,5 +15,7 @@ int main(int argc, char *argv[])
     for (auto it : list.archivos)
         std::cout << it.path().stem() << std::endl;
 
+    DescifrarClave(list.archivos[0]);
+
     return 0;
 }

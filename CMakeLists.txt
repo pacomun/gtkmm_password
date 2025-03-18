@@ -11,16 +11,18 @@ set(CMAKE_BUILD_TYPE DEBUG)
 include(FindPkgConfig)
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(GTKMM REQUIRED gtkmm-4.0)
+pkg_check_modules(GPGME REQUIRED gpgme)
 
 link_directories(${GTKMM_LIBRARY_DIRS})
 include_directories(${GTKMM_INCLUDE_DIRS})
 
-add_library(fsys STATIC fsys.cpp)
+add_library(fsys STATIC fsys.cpp auxiliar.cpp)
 
 # Adicionar directorios
 # ---------------------
  add_subdirectory(treestore)
- add_executable(test_01 test_01.cpp fsys.cpp)
+ add_executable(test_01 test_01.cpp fsys.cpp auxiliar.cpp)
+ target_link_libraries(test_01 gpgme)
 
 # Adicionar ejecutables
 # ---------------------
