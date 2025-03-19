@@ -5,6 +5,8 @@
 #define VENTANA_MAIN_H
 #include <gtkmm.h>
 #include "../fsys.hpp"
+#include "../textview/textview.hpp"
+
 
 class VentanaMain : public Gtk::Window
 {
@@ -33,6 +35,7 @@ class VentanaMain : public Gtk::Window
 
         // Widget hijos.
         Gtk::Box m_VBox;
+        VisorTexto m_VisorTexto;
 
         Gtk::ScrolledWindow m_ScrolledWindown;
         Gtk::TreeView m_TreeView;

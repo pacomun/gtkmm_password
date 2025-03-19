@@ -24,6 +24,6 @@ struct clave
 bool LeerDeposito(const std::string& path, listado& list);
 
 /* Descifrar un archivo de claves. */
-clave DescifrarClave(std::filesystem::directory_entry& nombre_clave);
+std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave);
 
 #endif /* ifndef FSYS_HPP */

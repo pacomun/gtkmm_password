@@ -6,11 +6,17 @@
 // Constructor de VentanaMain
 VentanaMain::VentanaMain()
     : m_VBox(Gtk::Orientation::VERTICAL),
+    m_VisorTexto(),
     m_Button_Quit("Salir")
 {
     // Título de la ventana y tamaño por defecto.
     set_title("Gtkmm Password");
     set_default_size(800, 600);
+
+    m_VisorTexto.set_default_size(500, 250);
+    m_VisorTexto.set_transient_for(*this);
+    m_VisorTexto.set_modal();
+    m_VisorTexto.set_hide_on_close();
 
     // Colocamos el margen y añadimos la caja vertical.
     m_VBox.set_margin(5);
@@ -28,10 +34,10 @@ VentanaMain::VentanaMain()
     m_VBox.append(m_ScrolledWindown);
     m_VBox.append(m_ButtonBox);
 
-    m_ButtonBox.append(m_Button_Quit);
+    m_ButtonBox.set_halign(Gtk::Align::END);
     m_ButtonBox.set_margin(5);
+    m_ButtonBox.append(m_Button_Quit);
     m_Button_Quit.set_expand(false);
-    m_Button_Quit.set_halign(Gtk::Align::END);
     m_Button_Quit.signal_clicked().connect(sigc::mem_fun(*this,
                 &VentanaMain::on_button_quit));
 
@@ -108,7 +114,12 @@ void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
         std::cout << row[m_Columns.m_directory_entry] << std::endl;
         auto m_dir_entry = static_cast<std::filesystem::directory_entry>(row[m_Columns.m_directory_entry]);
         if (!m_dir_entry.is_directory())
-            DescifrarClave(m_dir_entry);
+        {
+            auto salida = DescifrarClave(m_dir_entry);
+            m_VisorTexto.set_visible(true);
+            m_VisorTexto.set_text(salida);
+            std::cout << salida << std::endl;
+        }
     }
 }
 

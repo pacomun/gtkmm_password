@@ -1,6 +1,7 @@
 #ifndef AUXILIAR_H
 #define AUXILIAR_H
 #include <gpgme.h>
+#include <string>
 #include <stdlib.h>
 /* Funciones auxiliares */
 
@@ -16,6 +17,5 @@ void mostrarKey(gpgme_key_t key);
 /* Imprimir datos de salida. fd es un archivo abierto para escritura, en caso
  * de ser NULL la salida será stderr. */
 void print_data(gpgme_data_t data, FILE* fd);
-
 
 #endif /* AUXILIAR_H */

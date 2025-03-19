@@ -1,5 +1,6 @@
 // Lectura de directorioo
 #include <algorithm>
+#include <cstring>
 #include "fsys.hpp"
 #include "auxiliar.h"
 
@@ -26,13 +27,13 @@ bool LeerDeposito(const std::string& path, listado& list)
 }
 
 
-clave DescifrarClave(std::filesystem::directory_entry& nombre_clave)
+std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave)
 {
-    // char *p;
-    // char buf[SIZE];
-    // size_t read_bytes;
-    // int tmp;
-    clave m_clave;
+    char buf[SIZE];
+    char *p;
+    size_t read_bytes;
+    bool tmp;
+    std::string m_clave;
     gpgme_ctx_t ctx;
     gpgme_error_t err;
     gpgme_data_t data, cipher;
@@ -60,8 +61,14 @@ clave DescifrarClave(std::filesystem::directory_entry& nombre_clave)
     err = gpgme_op_decrypt(ctx, cipher, data);
     if (err != GPG_ERR_NO_ERROR) throw "Error: en descifrado.\n";
 
-    print_data(data, NULL);
-
+    // Recuperar texto descifrado.
+    read_bytes = gpgme_data_seek(data, 0, SEEK_SET);
+    while ((read_bytes = gpgme_data_read(data, buf, SIZE)) > 0)
+    {
+        for (size_t i = 0; i < read_bytes; i++)
+            m_clave += buf[i];
+    }
+    
     gpgme_release(ctx);
     gpgme_data_release(cipher);
     gpgme_data_release(data);
