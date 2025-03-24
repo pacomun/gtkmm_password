@@ -154,4 +154,5 @@ void VentanaMain::on_mdialogo_ok(std::string& datos, std::filesystem::directory_
 {
     std::cout << "Señal emitida: \n" << "Nueva ruta = " << dir_entry <<
        "\nContraseña = " << datos << std::endl;
+    CifrarClave(datos, dir_entry);
 }

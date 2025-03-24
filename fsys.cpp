@@ -76,3 +76,69 @@ std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave)
 
     return m_clave;
 }
+
+void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry)
+{
+    char buf[SIZE];
+    char *p;
+    size_t read_bytes;
+    bool tmp;
+    std::string m_clave;
+    gpgme_key_t keys[2] = {0, 0};
+    gpgme_ctx_t ctx;
+    gpgme_error_t err;
+    gpgme_data_t data, cipher;
+
+    // Iniciar el entorno GPGME
+    init_gpgme(GPGME_PROTOCOL_OpenPGP);
+    
+    // Crear contexto
+    err = gpgme_new(&ctx);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    // Poner nuestro protocolo al contexto.
+    err = gpgme_set_protocol(ctx, GPGME_PROTOCOL_OpenPGP);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    gpgme_set_armor(ctx, 1);
+    
+    // Cargar cadena a cifrar.º
+    err = gpgme_data_new_from_mem(&data, datos.c_str(), datos.size(), 1);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    // Incializar contenedor para datos cifrados.
+    err = gpgme_data_new(&cipher);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    // Leer claves pública principal.
+    err = gpgme_op_keylist_start(ctx, "pacomun", 0);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    err = gpgme_op_keylist_next(ctx, keys);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    keys[1] = 0; // Termina en clave nula.
+
+    // Cifrar datos.
+    err = gpgme_op_encrypt(ctx, keys, GPGME_ENCRYPT_ALWAYS_TRUST, data, cipher);
+    if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
+
+    if (!std::filesystem::exists(dir_entry.path().parent_path()))
+        std::filesystem::create_directories(dir_entry.path().parent_path());
+
+    FILE *fd;
+    fd = fopen(dir_entry.path().c_str(), "w");
+    if (fd)
+    {
+        print_data(cipher, fd);
+        fclose(fd);
+    }
+    else
+        throw "No se pudo abrir archivo para escritura\n";
+
+    gpgme_release(ctx);
+    gpgme_data_release(data);
+    gpgme_data_release(cipher);
+    gpgme_key_release(keys[0]);
+}
+

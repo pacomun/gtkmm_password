@@ -26,4 +26,8 @@ bool LeerDeposito(const std::filesystem::path& path, listado& list);
 /* Descifrar un archivo de claves. */
 std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave);
 
+// Cifrar los datos pasados en el archivo dir_entry.
+// // Cifrar los datos pasados en el archivo dir_entry.
+void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry);
+
 #endif /* ifndef FSYS_HPP */
