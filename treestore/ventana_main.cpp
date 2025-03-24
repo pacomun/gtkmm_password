@@ -108,7 +108,6 @@ VentanaMain::VentanaMain()
     }
 
     // Añadir las columnas al su TreeView
-    // m_TreeView.append_column("ID", m_Columns.col_id);
     m_TreeView.append_column("Nombre", m_Columns.col_name);
 
     // Conectar señal
@@ -147,7 +146,6 @@ void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
             auto salida = DescifrarClave(m_dir_entry);
             m_VisorTexto.set_visible(true);
             m_VisorTexto.set_text(salida);
-            // std::cout << salida << std::endl;
         }
     }
 }

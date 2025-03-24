@@ -14,6 +14,7 @@ VisorTexto::VisorTexto()
 
     // Añadir m_TextView, con la barra de desplazamiento
     m_TextView.set_editable(false);
+    m_TextView.set_cursor_visible(false);
     m_ScrolledWindow.set_child(m_TextView);
     m_ScrolledWindow.set_policy(Gtk::PolicyType::AUTOMATIC,
             Gtk::PolicyType::AUTOMATIC);
