@@ -60,6 +60,10 @@ class VentanaMain : public Gtk::Window
         VentanaMain();
         virtual ~VentanaMain();
         static std::filesystem::path path_store;
+
+    private:
+        void llenar_modelo();
+        void refrescar_modelo();
 };
 
 #endif /* VENTANA_MAIN_H */

@@ -78,34 +78,8 @@ VentanaMain::VentanaMain()
         std::cerr << "Error: al lleer depósito. "<< e.what() << std::endl;
         exit(1);
     }
-    int id = 0;
-    for (int it = 0; it < m_listado.carpetas.size(); it++)
-    {
-        auto row = *(m_refTreeModel->append());
-        row[m_Columns.col_id] = id;
-        row[m_Columns.m_directory_entry] = m_listado.carpetas[it];
-        row[m_Columns.col_name] = m_listado.carpetas[it].path().stem().c_str();
-        id++;
-        m_hijos.archivos.clear(); // para no acumular archivos.
-        LeerDeposito(m_listado.carpetas[it].path(),m_hijos);
-        for (auto i : m_hijos.archivos)
-        {
-            auto childrow = *(m_refTreeModel->append(row.children()));
-            childrow[m_Columns.col_id] = id;
-            childrow[m_Columns.col_name] = i.path().stem().c_str();
-            childrow[m_Columns.m_directory_entry] = i;
-            id++;
-        }
 
-    }
-    for (auto i : m_listado.archivos)
-    {
-        auto row = *(m_refTreeModel->append());
-        row[m_Columns.col_id] = id;
-        row[m_Columns.m_directory_entry] = i;
-        row[m_Columns.col_name] = i.path().stem().c_str();
-        id++;
-    }
+    llenar_modelo();
 
     // Añadir las columnas al su TreeView
     m_TreeView.append_column("Nombre", m_Columns.col_name);
@@ -155,4 +129,43 @@ void VentanaMain::on_mdialogo_ok(std::string& datos, std::filesystem::directory_
     std::cout << "Señal emitida: \n" << "Nueva ruta = " << dir_entry <<
        "\nContraseña = " << datos << std::endl;
     CifrarClave(datos, dir_entry);
+    refrescar_modelo();
+}
+
+void VentanaMain::llenar_modelo()
+{
+    int id = 0;
+    for (int it = 0; it < m_listado.carpetas.size(); it++)
+    {
+        auto row = *(m_refTreeModel->append());
+        row[m_Columns.col_id] = id;
+        row[m_Columns.m_directory_entry] = m_listado.carpetas[it];
+        row[m_Columns.col_name] = m_listado.carpetas[it].path().stem().c_str();
+        id++;
+        m_hijos.archivos.clear(); // para no acumular archivos.
+        LeerDeposito(m_listado.carpetas[it].path(),m_hijos);
+        for (auto i : m_hijos.archivos)
+        {
+            auto childrow = *(m_refTreeModel->append(row.children()));
+            childrow[m_Columns.col_id] = id;
+            childrow[m_Columns.col_name] = i.path().stem().c_str();
+            childrow[m_Columns.m_directory_entry] = i;
+            id++;
+        }
+
+    }
+    for (auto i : m_listado.archivos)
+    {
+        auto row = *(m_refTreeModel->append());
+        row[m_Columns.col_id] = id;
+        row[m_Columns.m_directory_entry] = i;
+        row[m_Columns.col_name] = i.path().stem().c_str();
+        id++;
+    }
+}
+
+void VentanaMain::refrescar_modelo()
+{
+    m_refTreeModel->clear();
+    llenar_modelo();
 }
