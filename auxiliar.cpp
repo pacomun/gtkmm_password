@@ -47,7 +47,7 @@ void mostrarKey(gpgme_key_t key)
 void print_data(gpgme_data_t data, FILE* fd)
 {
     char buf[SIZE + 1];
-    int ret;
+    int ret;    
 
     ret = gpgme_data_seek(data, 0, SEEK_SET);
     while ((ret = gpgme_data_read(data, buf, SIZE )) > 0)

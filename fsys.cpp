@@ -7,7 +7,8 @@
 
 #define SIZE 512
 
-bool LeerDeposito(const std::string& path, listado& list)
+
+bool LeerDeposito(const std::filesystem::path& path, listado& list)
 {
     for (auto dir_entry : std::filesystem::directory_iterator{path})
     {

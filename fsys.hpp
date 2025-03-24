@@ -21,7 +21,7 @@ struct clave
 };
 
 /* Llena dos vectores, uno con carpetas y otro con archivos. */
-bool LeerDeposito(const std::string& path, listado& list);
+bool LeerDeposito(const std::filesystem::path& path, listado& list);
 
 /* Descifrar un archivo de claves. */
 std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave);
