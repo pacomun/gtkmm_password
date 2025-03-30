@@ -2,6 +2,7 @@
 #include <iostream>
 #include "ventana_main.hpp"
 
+
 // Ruta al depósito
 std::filesystem:: path VentanaMain::path_store = "./password-store";
 
@@ -11,7 +12,7 @@ VentanaMain::VentanaMain()
     m_VisorTexto(),
     m_Button_Quit("Salir"),
     m_Button_Nueva("Nueva Clave"),
-    m_Button_Editar("Editar Clave"),
+    m_Button_Eliminar("Eliminar Clave"),
     m_Button_Subir("Subir al servidor"),
     m_Button_Bajar("Bajar del servidor")
 {
@@ -19,6 +20,7 @@ VentanaMain::VentanaMain()
     set_title("Gtkmm Password");
     set_default_size(800, 600);
 
+    // Ventana visor de texto
     m_VisorTexto.set_default_size(500, 250);
     m_VisorTexto.set_transient_for(*this);
     m_VisorTexto.set_modal();
@@ -26,6 +28,13 @@ VentanaMain::VentanaMain()
     m_Mdialogo.set_transient_for(*this);
     m_Mdialogo.set_modal();
     m_Mdialogo.set_hide_on_close();
+
+    // Ventana para confirmar borrado.
+    m_refDconfirma = Dconfirma::create("<b>Atención</b>", "");
+    m_refDconfirma->set_transient_for(*this);
+    m_refDconfirma->set_modal();
+    m_refDconfirma->set_hide_on_close();
+
 
     // Colocamos el margen y añadimos la caja vertical.
     m_VBox.set_margin(5);
@@ -50,7 +59,7 @@ VentanaMain::VentanaMain()
     m_ButtonBox.append(m_Button_Subir);
     m_ButtonBox.append(m_Button_Bajar);
     m_ButtonBox.append(m_Button_Nueva);
-    m_ButtonBox.append(m_Button_Editar);
+    m_ButtonBox.append(m_Button_Eliminar);
     m_ButtonBox.append(m_Button_Quit);
     m_Button_Quit.set_expand(false);
 
@@ -59,8 +68,12 @@ VentanaMain::VentanaMain()
                 &VentanaMain::on_button_quit));
     m_Button_Nueva.signal_clicked().connect(sigc::mem_fun(*this,
                 &VentanaMain::on_button_Nueva));
+    m_Button_Eliminar.signal_clicked().connect(sigc::mem_fun(*this,
+                &VentanaMain::on_button_eliminar));
     m_Mdialogo.signal_ok().connect(sigc::mem_fun(*this, 
                 &VentanaMain::on_mdialogo_ok));
+    m_refDconfirma->buttons_clicked_connect(sigc::mem_fun(*this,
+                &VentanaMain::on_dconfirma_resp));
 
     // Crear el modelo
     m_refTreeModel = Gtk::TreeStore::create(m_Columns);
@@ -75,7 +88,7 @@ VentanaMain::VentanaMain()
     }
     catch (std::exception& e)
     {
-        std::cerr << "Error: al lleer depósito. "<< e.what() << std::endl;
+        std::cerr << "Error: al leer depósito. "<< e.what() << std::endl;
         exit(1);
     }
 
@@ -84,7 +97,7 @@ VentanaMain::VentanaMain()
     // Añadir las columnas al su TreeView
     m_TreeView.append_column("Nombre", m_Columns.col_name);
 
-    // Conectar señal
+    // Conectar señal 
     m_TreeView.signal_row_activated().connect(sigc::mem_fun(*this,
                 &VentanaMain::on_treeview_row_activate));
 }
@@ -104,6 +117,25 @@ void VentanaMain::on_button_Nueva()
     m_Mdialogo.set_visible(true);
 }
 
+void VentanaMain::on_button_eliminar()
+{
+    auto refTreeSelection = m_TreeView.get_selection();
+    auto iter = refTreeSelection->get_selected();
+    if (iter)
+    {
+        auto row = *iter;
+        std::cout << "Fila seleccionada: " << row[m_Columns.m_directory_entry] << std::endl;
+        m_selected_entry = row[m_Columns.m_directory_entry]; // Valor seleccionado.
+        std::string mensaje = "Se borrará la clave <tt>";
+        mensaje = mensaje +
+            std::string{static_cast<std::filesystem::directory_entry>(row[m_Columns.m_directory_entry]).path().stem()};
+        mensaje += "</tt>";
+
+        m_refDconfirma->set_label_mensaje((mensaje));
+        m_refDconfirma->set_visible(true);
+    }
+}
+
 void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
         Gtk::TreeViewColumn* /* column */)
 {
@@ -117,7 +149,16 @@ void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
         auto m_dir_entry = static_cast<std::filesystem::directory_entry>(row[m_Columns.m_directory_entry]);
         if (!m_dir_entry.is_directory())
         {
-            auto salida = DescifrarClave(m_dir_entry);
+            std::string salida;
+            try
+            {
+            salida = DescifrarClave(m_dir_entry);
+            }
+            catch (const char* e )
+            {
+                std::cerr << "Excepción: " << e << std::endl;
+                return;
+            }
             m_VisorTexto.set_visible(true);
             m_VisorTexto.set_text(salida);
         }
@@ -130,6 +171,32 @@ void VentanaMain::on_mdialogo_ok(std::string& datos, std::filesystem::directory_
        "\nContraseña = " << datos << std::endl;
     CifrarClave(datos, dir_entry);
     refrescar_modelo();
+}
+
+void VentanaMain::on_dconfirma_resp(const Glib::ustring& cad)
+{
+    if (cad == "OK")
+    {
+        std::cout << "capturado OK\n";
+        m_refDconfirma->set_visible(false);
+        std::cout << "Entrada de directorio seleccionada = " << m_selected_entry << std::endl;
+        try
+        {
+            std::filesystem::remove(m_selected_entry);;
+        }
+        catch (std::exception& e)
+        {
+            std::cerr << "Error: " << e.what() << std::endl;
+            return;
+        }
+        std::cout << "Borrada clave " << m_selected_entry << std::endl;
+        refrescar_modelo();
+    }
+    else
+    {
+        std::cout << "Se a cancelado la operación.\n";
+        m_refDconfirma->set_visible(false);
+    }
 }
 
 void VentanaMain::llenar_modelo()
@@ -167,5 +234,8 @@ void VentanaMain::llenar_modelo()
 void VentanaMain::refrescar_modelo()
 {
     m_refTreeModel->clear();
+    m_listado.carpetas.clear();
+    m_listado.archivos.clear();
+    LeerDeposito(path_store, m_listado);
     llenar_modelo();
 }
