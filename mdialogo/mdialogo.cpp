@@ -8,7 +8,7 @@ Mdialogo::Mdialogo()
     : Gtk::Window(),
     m_Label_Carpeta("Carpeta", Gtk::Align::START),
     m_ComboBoxText(true),
-    m_Label_Clave("Constraseña"),
+    m_Label_Clave("Nombre:"),
     m_Entry_Clave(),
     m_Button_Gen("Generar"),
     m_TextView(),
