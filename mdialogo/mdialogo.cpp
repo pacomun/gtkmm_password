@@ -2,6 +2,7 @@
 #include "mdialogo.hpp" 
 #include <iostream>
 #include "../treestore/ventana_main.hpp"
+#include "../genera.cpp"
 
 
 Mdialogo::Mdialogo()
@@ -80,8 +81,7 @@ void Mdialogo::on_button_cancel()
 
 void Mdialogo::on_button_gen()
 {
-    std::cout << "Pulsado botón gen\n";
-    set_visible(false);
+    m_Entry_pass.set_text(pcm::GenerarClave(16));
 }
 
 void Mdialogo::set_vdirectory_entry(std::vector<std::filesystem::directory_entry>& dir_entry)
