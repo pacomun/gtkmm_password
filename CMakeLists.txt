@@ -16,7 +16,7 @@ pkg_check_modules(GPGME REQUIRED gpgme)
 link_directories(${GTKMM_LIBRARY_DIRS})
 include_directories(${GTKMM_INCLUDE_DIRS})
 
-add_library(fsys STATIC fsys.cpp auxiliar.cpp)
+add_library(fsys STATIC fsys.cpp auxiliar.cpp genera.cpp)
 
 # Adicionar directorios
 # ---------------------

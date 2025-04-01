@@ -70,6 +70,10 @@ VentanaMain::VentanaMain()
                 &VentanaMain::on_button_Nueva));
     m_Button_Eliminar.signal_clicked().connect(sigc::mem_fun(*this,
                 &VentanaMain::on_button_eliminar));
+    m_Button_Subir.signal_clicked().connect(sigc::mem_fun(*this,
+                &VentanaMain::on_button_subir));
+    m_Button_Bajar.signal_clicked().connect(sigc::mem_fun(*this,
+                &VentanaMain::on_button_bajar));
     m_Mdialogo.signal_ok().connect(sigc::mem_fun(*this, 
                 &VentanaMain::on_mdialogo_ok));
     m_refDconfirma->buttons_clicked_connect(sigc::mem_fun(*this,
@@ -100,6 +104,9 @@ VentanaMain::VentanaMain()
     // Conectar señal 
     m_TreeView.signal_row_activated().connect(sigc::mem_fun(*this,
                 &VentanaMain::on_treeview_row_activate));
+
+    // Crear Diálogo de alertea
+    m_refDialog = Gtk::AlertDialog::create();
 }
 
 VentanaMain::~VentanaMain()
@@ -134,6 +141,24 @@ void VentanaMain::on_button_eliminar()
         m_refDconfirma->set_label_mensaje((mensaje));
         m_refDconfirma->set_visible(true);
     }
+}
+
+void VentanaMain::on_button_bajar()
+{
+    m_refDialog->set_buttons({});
+    m_refDialog->set_default_button(-1);
+    m_refDialog->set_message("Bajar del servidor");
+    m_refDialog->set_detail("Esta acción baja actualizaciones\n desde el repositorio.");
+    m_refDialog->show(*this);
+}
+
+void VentanaMain::on_button_subir()
+{
+    m_refDialog->set_buttons({});
+    m_refDialog->set_default_button(-1);
+    m_refDialog->set_message("Subir del servidor");
+    m_refDialog->set_detail("Esta acción sube cambios\n al repositorio.");
+    m_refDialog->show(*this);
 }
 
 void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
@@ -186,7 +211,10 @@ void VentanaMain::on_dconfirma_resp(const Glib::ustring& cad)
         }
         catch (std::exception& e)
         {
+            m_refDialog->set_message("Error:");
+            m_refDialog->set_detail(e.what());
             std::cerr << "Error: " << e.what() << std::endl;
+            m_refDialog->show(*this);
             return;
         }
         std::cout << "Borrada clave " << m_selected_entry << std::endl;

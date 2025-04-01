@@ -17,6 +17,8 @@ class VentanaMain : public Gtk::Window
         void on_button_quit();
         void on_button_Nueva();
         void on_button_eliminar();
+        void on_button_bajar();
+        void on_button_subir();
         void on_treeview_row_activate(const Gtk::TreeModel::Path& path,
                 Gtk::TreeViewColumn* column);
         void on_mdialogo_ok(std::string& datos, std::filesystem::directory_entry& dir_entry);
@@ -48,6 +50,7 @@ class VentanaMain : public Gtk::Window
         Gtk::TreeView m_TreeView;
         Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
         Glib::RefPtr<Dconfirma> m_refDconfirma;
+        Glib::RefPtr<Gtk::AlertDialog> m_refDialog;
 
         Gtk::Box m_ButtonBox;
         Gtk::Button m_Button_Quit;
