@@ -4,7 +4,7 @@
 
 
 // Ruta al depósito
-std::filesystem:: path VentanaMain::path_store = "./password-store";
+std::filesystem::path VentanaMain::path_store = "./password-store";
 
 // Constructor de VentanaMain
 VentanaMain::VentanaMain()
@@ -83,19 +83,20 @@ VentanaMain::VentanaMain()
     m_refTreeModel = Gtk::TreeStore::create(m_Columns);
     m_TreeView.set_model(m_refTreeModel);
 
+    // Poner el directorio de trabajo al depósito de claves.
+    std::filesystem::current_path(VentanaMain::path_store);
+
     // Llenar el modelo
-    if (!std::filesystem::exists(path_store))
-        throw "No existe el depósito de Claves\n";
     try
     {
-        LeerDeposito(path_store , m_listado);
+        LeerDeposito(std::filesystem::current_path() , m_listado);
     }
     catch (std::exception& e)
     {
-        std::cerr << "Error: al leer depósito. "<< e.what() << std::endl;
-        exit(1);
+        std::cerr << "Error: " << 
+        e.what();
     }
-
+   
     llenar_modelo();
 
     // Añadir las columnas al su TreeView
@@ -107,6 +108,7 @@ VentanaMain::VentanaMain()
 
     // Crear Diálogo de alertea
     m_refDialog = Gtk::AlertDialog::create();
+
 }
 
 VentanaMain::~VentanaMain()
@@ -148,7 +150,8 @@ void VentanaMain::on_button_bajar()
     m_refDialog->set_buttons({});
     m_refDialog->set_default_button(-1);
     m_refDialog->set_message("Bajar del servidor");
-    m_refDialog->set_detail("Esta acción baja actualizaciones\n desde el repositorio.");
+    auto salida = HacerPull();
+    m_refDialog->set_detail(salida);
     m_refDialog->show(*this);
 }
 
@@ -156,8 +159,9 @@ void VentanaMain::on_button_subir()
 {
     m_refDialog->set_buttons({});
     m_refDialog->set_default_button(-1);
-    m_refDialog->set_message("Subir del servidor");
-    m_refDialog->set_detail("Esta acción sube cambios\n al repositorio.");
+    m_refDialog->set_message("Subir al servidor");
+    auto salida = HacerPush();
+    m_refDialog->set_detail(salida);
     m_refDialog->show(*this);
 }
 
@@ -194,7 +198,14 @@ void VentanaMain::on_mdialogo_ok(std::string& datos, std::filesystem::directory_
 {
     std::cout << "Señal emitida: \n" << "Nueva ruta = " << dir_entry <<
        "\nContraseña = " << datos << std::endl;
-    CifrarClave(datos, dir_entry);
+    try
+    {
+        CifrarClave(datos, dir_entry);
+    }
+    catch (...)
+    {
+        std::cerr << "Error en cifrado: " << dir_entry << std::endl;
+    }
     refrescar_modelo();
 }
 
@@ -264,6 +275,6 @@ void VentanaMain::refrescar_modelo()
     m_refTreeModel->clear();
     m_listado.carpetas.clear();
     m_listado.archivos.clear();
-    LeerDeposito(path_store, m_listado);
+    LeerDeposito(std::filesystem::current_path(), m_listado);
     llenar_modelo();
 }

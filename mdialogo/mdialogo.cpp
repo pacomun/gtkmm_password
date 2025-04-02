@@ -111,28 +111,47 @@ void Mdialogo::recuperar_datos(std::string& datos, std::filesystem::directory_en
 
     datos = m_Entry_pass.get_text() + "\n" + m_refTextBuffer->get_text();
 
+    // Nombre del archivo a crear.
     std::filesystem::path clave_tmp;
-    clave_tmp = VentanaMain::path_store;
+    // clave_tmp = VentanaMain::path_store;
     for(auto it : vdirectory_entry)
     {
+        // Añadimos ruta si coincide con dir entry
         if (it.path().stem().c_str() == m_ComboBoxText.get_entry_text())
         {
             clave_tmp = it.path();
             break;
-        }
+        } 
     }
+    
+    // No añadirmos dir_entry nuevo.
     if (m_ComboBoxText.get_entry_text().empty())
         clave_tmp = clave_tmp / static_cast<std::string>(m_Entry_Clave.get_text());
     else
     {
-        clave_tmp = VentanaMain::path_store / static_cast<std::string>(m_ComboBoxText.get_entry_text());
+        // Nueva carpeta de claves.
+        clave_tmp = static_cast<std::string>(m_ComboBoxText.get_entry_text());
         clave_tmp = clave_tmp / static_cast<std::string>(m_Entry_Clave.get_text());
+
     }
 
     dir_entry.assign(clave_tmp);
     // Añadir extensión
     std::string tmp = dir_entry.path().string() + ".gpg";
-    dir_entry.assign(tmp);
-}
 
+    dir_entry.assign(tmp);
+
+    std::cout << "Carpeta padre:" << dir_entry.path().parent_path() << std::endl;
+    // Crear la carpenta en caso de que sea nueva.
+    if (dir_entry.path().parent_path().empty())
+        return;
+
+    // Crear la nueva carpeta.
+    if (!std::filesystem::exists(dir_entry.path().parent_path()))
+    {
+        std::filesystem::create_directories(dir_entry.path().parent_path());
+        std::cout << "¿Exite la nueva carpeta? " << std::filesystem::exists(dir_entry.path().parent_path())
+                << std::endl;
+    }
+}
 

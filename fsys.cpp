@@ -1,5 +1,7 @@
 // Lectura de directorioo
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 #include <cstring>
 #include "fsys.hpp"
 #include "auxiliar.h"
@@ -123,8 +125,9 @@ void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry
     err = gpgme_op_encrypt(ctx, keys, GPGME_ENCRYPT_ALWAYS_TRUST, data, cipher);
     if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
 
-    if (!std::filesystem::exists(dir_entry.path().parent_path()))
-        std::filesystem::create_directories(dir_entry.path().parent_path());
+    // Crea el directorio si es nuevo.
+    // if (!std::filesystem::exists(dir_entry.path().parent_path()))
+    //     std::filesystem::create_directories(dir_entry.path().parent_path());
 
     FILE *fd;
     fd = fopen(dir_entry.path().c_str(), "w");
@@ -142,3 +145,69 @@ void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry
     gpgme_key_release(keys[0]);
 }
 
+std::string HacerPull()
+{
+    std::string command, salida;
+    std::vector<std::string> v_cad;
+    // Poner el directorio de trabajo a deposito
+    
+    // Montar path del archivo de log.
+    std::filesystem::path tmp_file = std::filesystem::temp_directory_path() / "gtkmm_password.log";
+
+    std::cout << "Directorio de trabajo: "  << std::filesystem::current_path() << std::endl;
+    command = "git pull > " + static_cast<std::string>(tmp_file);
+    auto retorno = std::system(command.c_str());
+    
+    std::ifstream iftmp(tmp_file.c_str());
+    if (!iftmp)
+    {
+        throw "Error al abrir archivo\n";
+    }
+    while(!iftmp.eof())
+    {
+        std::string tmp;
+        std::getline(iftmp, tmp);
+        salida += tmp + "\n";
+    }
+    command = "rm " + static_cast<std::string>(tmp_file);
+    std::system(command.c_str());
+
+    return salida;
+}
+
+std::string HacerPush()
+{
+    std::string command, salida;
+    std::vector<std::string> v_cad;
+    
+    // Montar path del archivo de log.
+    std::filesystem::path tmp_file = std::filesystem::temp_directory_path() / "gtkmm_password.log";
+
+    std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
+    command = "git add . >" + static_cast<std::string>(tmp_file);
+
+    std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
+    std::system(command.c_str());
+
+    std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
+    command = "git commit --allow-empty-message -m \"\" >> " + static_cast<std::string>(tmp_file);
+    std::system(command.c_str());
+    command = "git push >> " + static_cast<std::string>(tmp_file);
+    std::system(command.c_str());
+
+    std::ifstream iftmp(tmp_file.c_str());
+    if (!iftmp)
+    {
+        throw "Error al abrir archivo\n";
+    }
+    while(!iftmp.eof())
+    {
+        std::string tmp;
+        std::getline(iftmp, tmp);
+        salida += tmp + "\n";
+    }
+    command = "rm " + static_cast<std::string>(tmp_file);
+    std::system(command.c_str());
+
+    return salida;
+}

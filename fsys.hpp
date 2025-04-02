@@ -40,4 +40,10 @@ namespace pcm {
 
 } /* End namespace pcm */
 
+// Función que actualiza cambios desde repositorios de claves
+std::string HacerPull();
+
+// Función que realiza commit y envía cambios al servidor
+std::string HacerPush();
+
 #endif /* ifndef FSYS_HPP */
