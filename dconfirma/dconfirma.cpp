@@ -19,7 +19,7 @@ Dconfirma::Dconfirma(const Glib::ustring& titulo,
     set_child(m_Grid);
 
     // Imagen
-    auto m_pixbuf = Gdk::Pixbuf::create_from_file("g1.png");
+    auto m_pixbuf = Gdk::Pixbuf::create_from_file("/usr/share/pixmaps/gtkmm_password/g1.png");
     auto m_imagen = Gtk::Image(m_pixbuf);
 
     m_Label_Titulo.set_use_markup(true);
