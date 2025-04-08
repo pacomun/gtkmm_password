@@ -1,4 +1,5 @@
 // Lectura de directorioo
+#include <cstdlib>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
@@ -210,4 +211,32 @@ std::string HacerPush()
     std::system(command.c_str());
 
     return salida;
+}
+
+
+// Recuperar la direción del depósito guardado en el archivo de configuración.
+int Confirguracion(std::string& deposito, std::string& HOME)
+{
+    // Recuperar variable de entorno HOME
+    HOME = std::getenv("HOME");
+
+    // Comprobar si existe archivo de configuración
+    std::filesystem::path fconf = HOME +  "/.gtkmm_password.toml";
+    if (!std::filesystem::exists(fconf))
+        throw "No existe un archivo de configuración\n";
+
+    // Letura de la cadena.
+    std::cout << "Ruta del archivo de configuración: " << fconf << std::endl;
+
+    try
+    {
+        auto data = toml::parse(fconf);
+        deposito = toml::find<std::string>(data, "deposito");
+    }
+    catch (...)
+    {
+        std::cerr << "Error al recuperar depósito.\n";
+    }
+
+    return 0;
 }

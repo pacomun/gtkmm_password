@@ -4,8 +4,12 @@
 #include <vector>
 #include <string>
 #include <gpgme.h>
+#include <toml.hpp>
 
 
+
+/* Variables Globales */
+extern std::string HOME, deposito;
 
 /* Estructura de datos para guardar listado de archivos y directorios */
 struct listado
@@ -45,5 +49,8 @@ std::string HacerPull();
 
 // Función que realiza commit y envía cambios al servidor
 std::string HacerPush();
+
+// Función para configurar la aplicación.
+int Confirguracion(std::string& deposito, std::string& HOME);
 
 #endif /* ifndef FSYS_HPP */

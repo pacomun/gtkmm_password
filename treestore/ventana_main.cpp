@@ -1,10 +1,8 @@
 // ventana_main.cpp 
 #include <iostream>
 #include "ventana_main.hpp"
+#include "../fsys.hpp"
 
-
-// Ruta al depósito
-std::filesystem::path VentanaMain::path_store = "./password-store";
 
 // Constructor de VentanaMain
 VentanaMain::VentanaMain()

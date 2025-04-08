@@ -2,10 +2,13 @@
 #define AUXILIAR_H
 #include <gpgme.h>
 #include <string>
-#include <stdlib.h>
+#include <cstdlib>
 /* Funciones auxiliares */
 
 #define SIZE 512
+
+/* Variables Globales */
+extern std::string HOME, deposito;
 
 /* Inicialización de gpgme */
 void init_gpgme(gpgme_protocol_t proto);
