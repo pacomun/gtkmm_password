@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     }
 
     // Ruta al depósito
-    // std::cout << "Deposito: " << deposito << std::endl;
+    std::cout << "Deposito: " << deposito << std::endl;
     VentanaMain::path_store = deposito;
 
     auto app = Gtk::Application::create("pacomun.gtkmm.password");
