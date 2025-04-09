@@ -226,7 +226,7 @@ int Confirguracion(std::string& deposito, std::string& HOME)
         throw "No existe un archivo de configuración\n";
 
     // Letura de la cadena.
-    // std::cout << "Ruta del archivo de configuración: " << fconf << std::endl;
+    std::cout << "Ruta del archivo de configuración: " << fconf << std::endl;
 
     try
     {
