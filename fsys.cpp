@@ -155,7 +155,7 @@ std::string HacerPull()
     // Montar path del archivo de log.
     std::filesystem::path tmp_file = std::filesystem::temp_directory_path() / "gtkmm_password.log";
 
-    std::cout << "Directorio de trabajo: "  << std::filesystem::current_path() << std::endl;
+    // std::cout << "Directorio de trabajo: "  << std::filesystem::current_path() << std::endl;
     command = "git pull > " + static_cast<std::string>(tmp_file);
     auto retorno = std::system(command.c_str());
     
@@ -184,13 +184,13 @@ std::string HacerPush()
     // Montar path del archivo de log.
     std::filesystem::path tmp_file = std::filesystem::temp_directory_path() / "gtkmm_password.log";
 
-    std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
+    // std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
     command = "git add . >" + static_cast<std::string>(tmp_file);
 
-    std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
+    // std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
     std::system(command.c_str());
 
-    std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
+    // std::cout << "Directorio de trabajo: " << std::filesystem::current_path() << std::endl;
     command = "git commit --allow-empty-message -m \"\" >> " + static_cast<std::string>(tmp_file);
     std::system(command.c_str());
     command = "git push >> " + static_cast<std::string>(tmp_file);
@@ -226,7 +226,7 @@ int Confirguracion(std::string& deposito, std::string& HOME)
         throw "No existe un archivo de configuración\n";
 
     // Letura de la cadena.
-    std::cout << "Ruta del archivo de configuración: " << fconf << std::endl;
+    // std::cout << "Ruta del archivo de configuración: " << fconf << std::endl;
 
     try
     {

@@ -46,7 +46,6 @@ Dconfirma::Dconfirma(const Glib::ustring& titulo,
 
 Dconfirma::~Dconfirma()
 {
-    std::cout << "Llamada al destructor\n";
 }
 
 Glib::RefPtr<Dconfirma> Dconfirma::create(const Glib::ustring& titulo,

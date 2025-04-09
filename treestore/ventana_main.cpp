@@ -131,7 +131,7 @@ void VentanaMain::on_button_eliminar()
     if (iter)
     {
         auto row = *iter;
-        std::cout << "Fila seleccionada: " << row[m_Columns.m_directory_entry] << std::endl;
+        // std::cout << "Fila seleccionada: " << row[m_Columns.m_directory_entry] << std::endl;
         m_selected_entry = row[m_Columns.m_directory_entry]; // Valor seleccionado.
         std::string mensaje = "Se borrará la clave <tt>";
         mensaje = mensaje +
@@ -170,9 +170,9 @@ void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
     if (iter)
     {
         const auto row = *iter;
-        std::cout << "Row activated: ID=" << row[m_Columns.col_id] << ", Name="
-            << row[m_Columns.col_name] << std::endl;
-        std::cout << row[m_Columns.m_directory_entry] << std::endl;
+        // std::cout << "Row activated: ID=" << row[m_Columns.col_id] << ", Name="
+            // << row[m_Columns.col_name] << std::endl;
+        // std::cout << row[m_Columns.m_directory_entry] << std::endl;
         auto m_dir_entry = static_cast<std::filesystem::directory_entry>(row[m_Columns.m_directory_entry]);
         if (!m_dir_entry.is_directory())
         {
@@ -194,8 +194,8 @@ void VentanaMain::on_treeview_row_activate(const Gtk::TreeModel::Path& path,
 
 void VentanaMain::on_mdialogo_ok(std::string& datos, std::filesystem::directory_entry& dir_entry)
 {
-    std::cout << "Señal emitida: \n" << "Nueva ruta = " << dir_entry <<
-       "\nContraseña = " << datos << std::endl;
+    // std::cout << "Señal emitida: \n" << "Nueva ruta = " << dir_entry <<
+       // "\nContraseña = " << datos << std::endl;
     try
     {
         CifrarClave(datos, dir_entry);
@@ -211,9 +211,9 @@ void VentanaMain::on_dconfirma_resp(const Glib::ustring& cad)
 {
     if (cad == "OK")
     {
-        std::cout << "capturado OK\n";
+        // std::cout << "capturado OK\n";
         m_refDconfirma->set_visible(false);
-        std::cout << "Entrada de directorio seleccionada = " << m_selected_entry << std::endl;
+        // std::cout << "Entrada de directorio seleccionada = " << m_selected_entry << std::endl;
         try
         {
             std::filesystem::remove(m_selected_entry);;
@@ -226,12 +226,12 @@ void VentanaMain::on_dconfirma_resp(const Glib::ustring& cad)
             m_refDialog->show(*this);
             return;
         }
-        std::cout << "Borrada clave " << m_selected_entry << std::endl;
+        // std::cout << "Borrada clave " << m_selected_entry << std::endl;
         refrescar_modelo();
     }
     else
     {
-        std::cout << "Se a cancelado la operación.\n";
+        // std::cout << "Se a cancelado la operación.\n";
         m_refDconfirma->set_visible(false);
     }
 }

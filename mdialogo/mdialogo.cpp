@@ -68,13 +68,13 @@ void Mdialogo::on_button_ok()
     std::filesystem::directory_entry m_dir_entry;
     recuperar_datos(datos, m_dir_entry);
     m_signal_ok.emit(datos, m_dir_entry);
-    std::cout << "Pulsado botón OK\n";
+    // std::cout << "Pulsado botón OK\n";
     set_visible(false);
 }
 
 void Mdialogo::on_button_cancel()
 {
-    std::cout << "Pulsado botón Cancel\n";
+    // std::cout << "Pulsado botón Cancel\n";
     set_visible(false);
 }
 
@@ -140,7 +140,7 @@ void Mdialogo::recuperar_datos(std::string& datos, std::filesystem::directory_en
 
     dir_entry.assign(tmp);
 
-    std::cout << "Carpeta padre:" << dir_entry.path().parent_path() << std::endl;
+    // std::cout << "Carpeta padre:" << dir_entry.path().parent_path() << std::endl;
     // Crear la carpenta en caso de que sea nueva.
     if (dir_entry.path().parent_path().empty())
         return;
@@ -149,8 +149,8 @@ void Mdialogo::recuperar_datos(std::string& datos, std::filesystem::directory_en
     if (!std::filesystem::exists(dir_entry.path().parent_path()))
     {
         std::filesystem::create_directories(dir_entry.path().parent_path());
-        std::cout << "¿Exite la nueva carpeta? " << std::filesystem::exists(dir_entry.path().parent_path())
-                << std::endl;
+        // std::cout << "¿Exite la nueva carpeta? " << std::filesystem::exists(dir_entry.path().parent_path())
+                // << std::endl;
     }
 }
 
