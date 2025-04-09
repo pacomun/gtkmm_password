@@ -1,7 +1,6 @@
 // mdialogo.cpp Dialogo personalizado.
 #include "mdialogo.hpp" 
 #include <iostream>
-#include "../treestore/ventana_main.hpp"
 #include "../genera.cpp"
 
 
