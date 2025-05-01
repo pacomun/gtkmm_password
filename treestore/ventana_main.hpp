@@ -35,7 +35,7 @@ class VentanaMain : public Gtk::Window
                 }
 
                 Gtk::TreeModelColumn<int> col_id;
-                Gtk::TreeModelColumn<std::filesystem::directory_entry> m_directory_entry;
+                Gtk::TreeModelColumn<std::string> m_directory_entry;
                 Gtk::TreeModelColumn<Glib::ustring> col_name;
         };
         
@@ -63,12 +63,12 @@ class VentanaMain : public Gtk::Window
         // Listado de carpetas y archivos.
         listado m_listado, m_hijos;
         // directory seleccionado.
-        std::filesystem::directory_entry m_selected_entry;
+        std::string m_selected_entry;
 
     public:
         VentanaMain();
         virtual ~VentanaMain();
-        static std::filesystem::path path_store;
+        static std::string path_store;
 
     private:
         void llenar_modelo();

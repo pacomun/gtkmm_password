@@ -2,6 +2,7 @@
 #include <iostream>
 #include <string>
 #include "fsys.hpp"
+#include "auxiliar.h"
 using namespace std;
 
 void ImprimirListado(listado& m_list)
@@ -33,7 +34,20 @@ int main(int argc, char *argv[])
     ImprimirListado(m_list);
 
 
-    // DescifrarClave(list.archivos[0]);
+    cout << DescifrarClave(m_list.archivos[0]) << endl;;
+
+    string datos = "Esto es una cadena cifrada";
+    string dir_entry = namefile + "/" + "nuevo.gpg";
+    try
+    {
+        CifrarClave(datos, dir_entry);
+    }
+    catch (const char* e)
+    {
+        cerr << e << endl;
+    }
+
+
 
     return 0;
 }

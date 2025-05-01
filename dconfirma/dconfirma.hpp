@@ -12,7 +12,7 @@ class Dconfirma : public Gtk::Window
         Gtk::Grid m_Grid;
         Gtk::Label m_Label_Titulo, m_Label_mensaje;
         Gtk::Box m_ButtonBox;
-        Gtk::Button m_Button_Ok, m_Button_Cancel;
+        Gtk::Button m_Button_Cancel, m_Button_Ok;
 
         static Dconfirma * m_pDconfirma;
  

@@ -20,6 +20,10 @@ int TypeFile(const std::string& entrada);
 /* Llena dos vectores, uno con carpetas y otro con archivos. */
 bool LeerDeposito(const std::string& path, listado& list);
 
+/* descifra u archivo */
+std::string DescifrarClave(std::string& nombre_clave);
 
+/* Cifrar clave recibe datos y un cadena con dir_entry */
+void CifrarClave(std::string& datos, std::string& dir_entry);
 
 #endif /* ifndef FSYS_HPP */

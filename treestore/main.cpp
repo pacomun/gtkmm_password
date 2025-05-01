@@ -4,7 +4,7 @@
 #include "../fsys.hpp"
 
 std::string deposito, HOME;
-std::filesystem::path VentanaMain::path_store = deposito;
+std::string VentanaMain::path_store = deposito;
 
 int main(int argc, char *argv[])
 {
