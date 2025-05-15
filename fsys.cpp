@@ -223,10 +223,19 @@ int Confirguracion(std::string& deposito, std::string& HOME)
     // Comprobar si existe archivo de configuración
     std::filesystem::path fconf = HOME +  "/.gtkmm_password.toml";
     if (!std::filesystem::exists(fconf))
-        throw "No existe un archivo de configuración\n";
+    {
+        std::cout << "No existe un archivo de configuración\n";
+        std::cout << "Creando el archivo de comfigiguración...\n";
+        std::ofstream myfile;
+        myfile.open(fconf.string());
+        std::filesystem::path deposito = HOME + "/.password-store";
+        myfile << "deposito = " << "\"" << deposito.string() << "\"" << std::endl;
+        myfile.close();
+    }
 
     // Letura de la cadena.
     std::cout << "Ruta del archivo de configuración: " << fconf << std::endl;
+    std::cout << "En caso de querer modificar la ruta al depósito, editar este archivo:" << fconf << std::endl;
 
     try
     {
