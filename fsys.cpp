@@ -24,7 +24,7 @@ bool LeerDeposito(const std::filesystem::path& path, listado& list)
         }
     }
     // Ordenar los vectores.
-    
+
     std::sort(list.archivos.begin(), list.archivos.end());
     std::sort(list.carpetas.begin(), list.carpetas.end());
     return true;
@@ -34,9 +34,9 @@ bool LeerDeposito(const std::filesystem::path& path, listado& list)
 std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave)
 {
     char buf[SIZE];
-    char *p;
+    // char *p;
     size_t read_bytes;
-    bool tmp;
+    // bool tmp;
     std::string m_clave;
     gpgme_ctx_t ctx;
     gpgme_error_t err;
@@ -44,7 +44,7 @@ std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave)
 
     // Iniciar el entorno GPGME
     init_gpgme(GPGME_PROTOCOL_OpenPGP);
-    
+
     // Crear contexto
     err = gpgme_new(&ctx);
     if (err != GPG_ERR_NO_ERROR) throw "Error: en descifrado.\n";
@@ -72,7 +72,7 @@ std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave)
         for (size_t i = 0; i < read_bytes; i++)
             m_clave += buf[i];
     }
-    
+
     gpgme_release(ctx);
     gpgme_data_release(cipher);
     gpgme_data_release(data);
@@ -82,10 +82,10 @@ std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave)
 
 void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry)
 {
-    char buf[SIZE];
-    char *p;
-    size_t read_bytes;
-    bool tmp;
+    // char buf[SIZE];
+    // char *p;
+    // size_t read_bytes;
+    // bool tmp;
     std::string m_clave;
     gpgme_key_t keys[2] = {0, 0};
     gpgme_ctx_t ctx;
@@ -94,7 +94,7 @@ void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry
 
     // Iniciar el entorno GPGME
     init_gpgme(GPGME_PROTOCOL_OpenPGP);
-    
+
     // Crear contexto
     err = gpgme_new(&ctx);
     if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
@@ -104,7 +104,7 @@ void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry
     if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
 
     gpgme_set_armor(ctx, 1);
-    
+
     // Cargar cadena a cifrar.º
     err = gpgme_data_new_from_mem(&data, datos.c_str(), datos.size(), 1);
     if (err != GPG_ERR_NO_ERROR) throw "Error: al cifrar cadena.\n";
@@ -151,14 +151,14 @@ std::string HacerPull()
     std::string command, salida;
     std::vector<std::string> v_cad;
     // Poner el directorio de trabajo a deposito
-    
+
     // Montar path del archivo de log.
     std::filesystem::path tmp_file = std::filesystem::temp_directory_path() / "gtkmm_password.log";
 
     // std::cout << "Directorio de trabajo: "  << std::filesystem::current_path() << std::endl;
     command = "git pull > " + static_cast<std::string>(tmp_file);
-    auto retorno = std::system(command.c_str());
-    
+    // auto retorno = std::system(command.c_str());
+
     std::ifstream iftmp(tmp_file.c_str());
     if (!iftmp)
     {
@@ -180,7 +180,7 @@ std::string HacerPush()
 {
     std::string command, salida;
     std::vector<std::string> v_cad;
-    
+
     // Montar path del archivo de log.
     std::filesystem::path tmp_file = std::filesystem::temp_directory_path() / "gtkmm_password.log";
 

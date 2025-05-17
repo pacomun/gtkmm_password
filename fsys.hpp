@@ -32,13 +32,14 @@ std::string DescifrarClave(std::filesystem::directory_entry& nombre_clave);
 
 // Cifrar los datos pasados en el archivo dir_entry.
 // // Cifrar los datos pasados en el archivo dir_entry.
-void CifrarClave(std::string& datos, std::filesystem::directory_entry& dir_entry);
+void CifrarClave(std::string& datos,
+        std::filesystem::directory_entry& dir_entry);
 
 namespace pcm {
 
     // Genera claves válidas
     std::string GenerarClave(
-            int longitud,  // Longitud 
+            int longitud,  // Longitud
             bool digit=true, // Con números
             bool signos=true);  // Con siginos ortográficos.
 
