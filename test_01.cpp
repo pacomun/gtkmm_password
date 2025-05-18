@@ -12,7 +12,6 @@ int main(int argc, char *argv[])
     std::filesystem::create_directory(deposito);
     std::cout << "Depósito temporal: " << deposito << std::endl;
     std::filesystem::path clave = deposito/ "clave.gpg";
-    std::cout << "Depósito temporal: " << deposito << std::endl;
     std::filesystem::directory_entry dir_clave(clave);
     std::string cadena_a_cifrar = "Esto es una cadena cifrada...\n";
     try
@@ -30,6 +29,8 @@ int main(int argc, char *argv[])
         std::cout << it.path().filename() << std::endl;
     for (auto it : list.archivos)
         std::cout << it.path().stem() << std::endl;
+    std::string cmd = "cat " + list.archivos[0].path().string();
+    std::system(cmd.c_str());
 
     auto salida = DescifrarClave(list.archivos[0]);
     std::cout << "Salida: " << salida << std::endl;
